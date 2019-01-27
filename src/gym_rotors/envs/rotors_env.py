@@ -26,24 +26,26 @@ class RotorsEnv(gym.GoalEnv):
 
         assert len(init_drone_pos)==3
 
-        # #Init Port
-        # random_number = random.randint(10000, 15000)
-        # self.port_ros = str(random_number) #os.environ["ROS_PORT_SIM"]
-        # self.port_gazebo = str(random_number+1) #os.environ["ROS_PORT_SIM"]
-        # os.environ["ROS_MASTER_URI"] = "http://localhost:"+self.port_ros
-        # os.environ["GAZEBO_MASTER_URI"] = "http://localhost:"+self.port_gazebo
-        # print("ROS_MASTER_URI=http://localhost:"+self.port_ros + "\n")
-        # print("GAZEBO_MASTER_URI=http://localhost:"+self.port_gazebo + "\n")
+        rospy.init_node('rotors_env_node')
 
-        # self.ros_path = os.path.dirname(subprocess.check_output(["which", "roscore"]))
-        # rospack = rospkg.RosPack()
+        #Init Port
+        random_number = random.randint(10000, 15000)
+        self.port_ros = str(random_number) #os.environ["ROS_PORT_SIM"]
+        self.port_gazebo = str(random_number+1) #os.environ["ROS_PORT_SIM"]
+        os.environ["ROS_MASTER_URI"] = "http://localhost:"+self.port_ros
+        os.environ["GAZEBO_MASTER_URI"] = "http://localhost:"+self.port_gazebo
+        print("ROS_MASTER_URI=http://localhost:"+self.port_ros + "\n")
+        print("GAZEBO_MASTER_URI=http://localhost:"+self.port_gazebo + "\n")
 
-        # if launchfile.startswith("/"):
-        #     fullpath = launchfile
-        # else:
-        #     fullpath = os.path.join(rospack.get_path('rotors_gazebo'),"launch",launchfile)
-        # if not os.path.exists(fullpath):
-        #     raise IOError("File "+fullpath+" does not exist")
+        self.ros_path = os.path.dirname(subprocess.check_output(["which", "roscore"]))
+        rospack = rospkg.RosPack()
+
+        if launchfile.startswith("/"):
+            fullpath = launchfile
+        else:
+            fullpath = os.path.join(rospack.get_path('rotors_gazebo'),"launch",launchfile)
+        if not os.path.exists(fullpath):
+            raise IOError("File "+fullpath+" does not exist")
 
         #Action Space
         self.action_space = spaces.Box(-1., 1., shape=(n_actions,), dtype='float32')
@@ -55,31 +57,31 @@ class RotorsEnv(gym.GoalEnv):
         self.seed()
         self.goal = self._sample_goal()
 
-        # #Drone Initial Pos
-        # x = "x:="+str(init_drone_pos[0])
-        # y = "y:="+str(init_drone_pos[1])
-        # z = "z:="+str(init_drone_pos[2])
-        # #Target Initial Pos
-        # tx = "tx:="+str(self.goal[0])
-        # ty = "ty:="+str(self.goal[1])
-        # tz = "tz:="+str(self.goal[2])
+        #Drone Initial Pos
+        x = "x:="+str(init_drone_pos[0])
+        y = "y:="+str(init_drone_pos[1])
+        z = "z:="+str(init_drone_pos[2])
+        #Target Initial Pos
+        tx = "tx:="+str(self.goal[0])
+        ty = "ty:="+str(self.goal[1])
+        tz = "tz:="+str(self.goal[2])
 
     
-        # self._roslaunch = subprocess.Popen([sys.executable, os.path.join(self.ros_path, b"roslaunch"), "-p", self.port_ros, fullpath,
-        #                                     x,y,z,tx,ty,tz])
-        # print ("Gazebo launched!")
+        self._roslaunch = subprocess.Popen([sys.executable, os.path.join(self.ros_path, b"roslaunch"), "-p", self.port_ros, fullpath,
+                                            x,y,z,tx,ty,tz])
+        print ("Gazebo launched!")
 
-        # self.gzclient_pid = 0
+        self.gzclient_pid = 0
         self.gconn = GazeboConnection()
 
-        # time.sleep(6)
+        time.sleep(6)
 
 
-        # ready = int(subprocess.check_output(["rosparam", "get",'/bebop2/position_step_node/ready']))
-        # while ready==0:
-        #     time.sleep(0.5)
-        #     int(subprocess.check_output(["rosparam", "get",'/bebop2/position_step_node/ready']))
-        # print("READY!")
+        ready = int(subprocess.check_output(["rosparam", "get",'/bebop2/position_step_node/ready']))
+        while ready==0:
+            time.sleep(0.5)
+            int(subprocess.check_output(["rosparam", "get",'/bebop2/position_step_node/ready']))
+        print("READY!")
 
     @property
     def dt(self):
@@ -145,12 +147,12 @@ class RotorsEnv(gym.GoalEnv):
         self.gconn.unpauseSim()
 
         # 4th: takes an observation of the initial condition of the robot
-        # observation = self._get_obs()
+        observation = self._get_obs()
 
-        # # 5th: pauses simulation
-        # self.gconn.pauseSim()
+        # 5th: pauses simulation
+        self.gconn.pauseSim()
 
-        # return observation
+        return observation
 
 
     def close(self):
