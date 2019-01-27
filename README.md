@@ -42,5 +42,3 @@ https://github.com/erlerobot/gym-gazebo
 
 https://bitbucket.org/theconstructcore/drone_training
 
-https://github.com/ayushgaud/rotors_simulator
-# mythesis_copy
