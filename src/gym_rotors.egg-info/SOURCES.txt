@@ -1,0 +1,7 @@
+README.md
+src/gym_rotors/__init__.py
+src/gym_rotors.egg-info/PKG-INFO
+src/gym_rotors.egg-info/SOURCES.txt
+src/gym_rotors.egg-info/dependency_links.txt
+src/gym_rotors.egg-info/requires.txt
+src/gym_rotors.egg-info/top_level.txt

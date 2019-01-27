@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import gym
+import gym_rotors
+import rospy
+import time
+
+env=gym.make('BebopReachPosition-v0')
+
+rospy.init_node('rotors_env_node')
+
+
+rospy.loginfo("enviroment created")
+
+env.reset()
+step = 1
+while True:
+    time.sleep(3)
+    rospy.loginfo("run_env wroking ")
+    action = env.action_space.sample()
+    print(step)
+    print(env.step(action))
+    step += 1
